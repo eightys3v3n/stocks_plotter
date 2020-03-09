@@ -1,87 +1,98 @@
 from collections import defaultdict
 from pathlib import Path
 from statements import get_statements
+from translations import *
 from plot import plot
+import datetime
 
 
-def date_range(transactions):
-    """Returns a min and max date for the transactions given"""
+def date_range(accounts):
+    """Returns a min and max date for the {act: {date: [Transaction]}} array given"""
     min_date = None
     max_date = None
-    for t in transactions:
-        if min_date is None:
-            min_date = t.date
-        elif min_date > t.date:
-            min_date = t.date
+    
+    for act, date_trans in accounts.items():
+        for date, trans in date_trans.items():
+            if min_date is None:
+                min_date = date
+            elif min_date > date:
+                min_date = date
 
-        if max_date is None:
-            max_date = t.date
-        elif max_date < t.date:
-            max_date = t.date
+            if max_date is None:
+                max_date = date
+            elif max_date < date:
+                max_date = date
     return min_date, max_date
 
 
-def day_date_list(start, end):
-    """Returns a list of date objects containing every day between the start and end (inclusive)"""
+def day_range(start, end):
+    """Returns a list of date objects containing every day between the start and end dates (inclusive)"""
     if end <= start: return 0
 
     diff = end - start
     dates = []
 
-    for d in range(diff.days):
-        dates.append(start + timedelta(days=d))
+    for d in range(diff.days+1):
+        dates.append(start + datetime.timedelta(days=d))
 
     return dates
 
 
-def date_wise(accounts):
-    """Translates [Transaction, ...] to {date:Transaction, ...}"""
-    accounts_date = {}
-    for act, trans in accounts.items():
-        dates_trans = defaultdict(lambda:[])
-        for t in trans:
-            dates_trans[t.date].append(t)
-        accounts_date[act] = dates_trans
-    return accounts_date
+def most_recent_bal_before(date, date_trans):
+    """
+    Returns the most recent balance <= the given date or None.
+    That means, the first date before the given date, and the last transaction in that list.
+
+    date_trans: {datetime.date: [Transaction]}
+    """
+    dates_before = []
+    for d, trans in date_trans.items():
+        if d < date:
+            dates_before.append((d, trans))
+    dates_before.sort()
+    
+    bal_af = None
+    while len(dates_before) > 0:
+        trans_before = dates_before.pop()[1]
+        
+        while bal_af is None:
+            bal_af = trans_before.pop().bal_af
+        
+    return bal_af
 
 
-def most_recent_before(date, date_trans):
-    """Returns the most recent balance <= the given date."""
-
-
-def fill_balances(dates, date_trans):
-    """Discover the balance for every given date."""
+def deduce_date(date, date_trans):
     pass
 
 
-def fill_balances(plot_data):
-    # [ [act, [dates], [bals]] ]
-    dates = set()
-    for act, dates, bals in plot_data:
-        for d in dates:
-            dates.add(d)
-
-
-def seperate_acts(trans):
-    """Takes in [Transaction, ...] and returns {act: [Transaction, ...]}."""
-    acts = {}
-    for t in trans:
-        if t.act in acts:
-            acts[t.act].append(t)
-        else:
-            acts[t.act] = [t,]
-    return acts
+def daily_balances(act_dates):
+    """Returns the balance at a daily interval."""
+    dates = day_range(*date_range(act_dates))
+    daily = {}
+    
+    for act, date_trans in act_dates.items():
+        daily[act] = {}
+        for date in dates:
+            if date in date_trans:
+                daily[act][date] = deduce_balance(date, date_trans)
+            else:
+                daily[act][date] = date_trans[date][-1]
+    return daily
 
 
 def main():
     transactions = get_statements(Path("statements"))
     # [Transaction, ...]
 
-    accounts = seperate_acts(transactions)
+    dates = daily_date_list(*date_range(transactions))
+
+    accounts = act_wise(transactions)
     # {act: [Transaction, ...]}
 
     act_date = date_wise(accounts)
     # {act: {date: [Transaction, ...]}}
+
+    act_date = fill_balances(act_dates)
 
     plot(act_date)
 
