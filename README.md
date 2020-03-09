@@ -10,6 +10,10 @@ Transaction type will also have to be capable of handling many kinds of statemen
 It is currently not working correctly because my plot first_calgary module (the first module)
 needs to fill in balances for days that don't have one (see First Calgary Credit Union).
 
+## Aliases
+Allows the renaming of accounts for ease of reading.
+Put a JSON output into aliases.json containing {"source account name": "what you want it to be"}
+
 
 ## Supported statements
 ### First Calgary Credit Union

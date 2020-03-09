@@ -98,6 +98,8 @@ def create_total(act_bals):
 
 
 def main():
+    account_aliases = json.loads(open("aliases.json", "r").read())
+    
     transactions = get_statements(Path("statements"))
     # [Transaction, ...]
 
