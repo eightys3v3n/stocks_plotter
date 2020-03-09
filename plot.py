@@ -16,15 +16,15 @@ def plot_wise(data):
     dates = set()
 
     for act, act_dates in data.items():
-        for date, trans in act_dates.items():
+        for date, bal in act_dates.items():
             dates.add(date)
-            if len(trans) == 0:
-                raise Exception("Account: '{}', Date: {} doesn't have a balance.".format(act, date))
     
     for act, act_dates in data.items():
         if set(act_dates) != dates:
+            with open("error.log", "w") as f:
+                f.write("{}\n".format(dates))
+                f.write("{}: {}\n".format(act, act_dates))
             raise Exception("Account: '{}' doesn't have the same dates as other given accounts.".format(act))
-
 
     for act, act_dates in data.items():
         # pick a random color for this account
@@ -33,7 +33,7 @@ def plot_wise(data):
         used.append(c)
 
         # append the data as a line
-        lines.append([act, list(act_dates.keys()), lisT(act_dates.values()), c])
+        lines.append([act, list(act_dates.keys()), list(act_dates.values()), c])
 
     return lines
 
@@ -47,7 +47,6 @@ def plot(data):
                sizing_mode="stretch_both")
 
     lines = plot_wise(data)
-    lines = fill_balances(lines)
     for act, dates, trans, color in lines:
         p.line(dates, trans, line_color=color, legend_label=act, line_width=4)
 
