@@ -29,7 +29,10 @@ def plot_wise(data):
     for act, act_dates in data.items():
         # pick a random color for this account
         c = None
-        while c in used: c = random.choice(colors)
+        if act != "total":
+            while c in used: c = random.choice(colors)
+        else:
+            c = "black"
         used.append(c)
 
         # append the data as a line

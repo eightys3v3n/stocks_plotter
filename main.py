@@ -86,6 +86,17 @@ def daily_balances(act_dates):
     return daily
 
 
+def create_total(act_bals):
+    totals = {}
+    for act, dates in act_bals.items():
+        for date, bal in dates.items():
+            if date in totals:
+                totals[date] += bal
+            else:
+                totals[date] = bal
+    act_bals["total"] = totals
+
+
 def main():
     transactions = get_statements(Path("statements"))
     # [Transaction, ...]
@@ -98,6 +109,9 @@ def main():
 
     balances = daily_balances(act_date)
     # {act: {date: balance}}
+
+    # adds a line for total value of all accounts.
+    create_total(balances)
     
     plot(balances)
 
