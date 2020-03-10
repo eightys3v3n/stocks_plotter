@@ -33,4 +33,8 @@ Put a JSON output into aliases.json containing {"source account name": "what you
 
 
 ## Versions
-- dbe72a5e38b6aa189199866938ff6a0641c9b7ca: Before refactor
+- dbe72a5e38b6aa189199866938ff6a0641c9b7ca:
+	Before refactor
+- d417120705d3ee1996163f932b67137f63858426:
+	After refactor
+	Modularized importing of data points. Fixed data interp

@@ -2,12 +2,11 @@ import random
 from collections import defaultdict
 from pathlib import Path
 from queue import Queue
-from bokeh.plotting import output_file, figure, show
-from bokeh.models import DatetimeTickFormatter
+import plotly.graph_objects as go
 
 
 def plot_wise(data):
-    """Takes in {act: {date: [Transaction, ...]}} and converts it to (act, [dates], [balances], color)."""
+    """Takes in {act: {date: balance}} and converts it to (act, [dates], [balances], color)."""
     lines = []
     colors = ('aqua','blue','brown','cyan','darkblue','darkgreen','darkorange','darkred','gold','green','grey','hotpink','lime','orange','pink','purple','red','silver','tan','yellow')
     used = [None, ] # used colors
@@ -42,17 +41,19 @@ def plot_wise(data):
 
 
 def plot(data):
-    output_file("plot.html", mode="inline")
-    p = figure(title="Balance vs Date/time",
-               x_axis_label="Date/time",
-               y_axis_label="$ Balance",
-               x_axis_type="datetime",
-               sizing_mode="stretch_both")
+    figure = go.Figure()
 
     lines = plot_wise(data)
-    for act, dates, trans, color in lines:
-        p.line(dates, trans, line_color=color, legend_label=act, line_width=4)
 
-    show(p)
-    return p
+    for act, dates, bals, color in lines:
+        figure.add_trace(go.Scatter(x=dates, y=bals,
+                                    mode='lines',
+                                    name=act,
+                                    line=dict(color=color, width=2)))
+
+    figure.update_layout(title="Net Worth Over Time",
+                         xaxis_title="Date",
+                         yaxis_title="CAD $")
+    figure.show()
+    return figure
 
