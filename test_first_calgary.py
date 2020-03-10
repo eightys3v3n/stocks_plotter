@@ -1,15 +1,9 @@
-from statements import *
+from first_calgary import *
 import datetime
 import unittest
 
 
-
-
 class TestStatements(unittest.TestCase):
-    def test_list_files(self):
-        pass
-
-
     def test_parse_csv_row(self):
         row = parse_csv_row(["Account Number      ", "28-Feb-2020", "Transfer out to ...      ", "", "85.00", "", "390.47"])
         self.assertEqual(len(row), 7)
@@ -40,5 +34,3 @@ class TestStatements(unittest.TestCase):
         self.assertEqual(t.amt, 85)
         self.assertEqual(t.bal_af, 390.47)
         self.assertEqual(t.bal_be, 390.47-85)
-
-

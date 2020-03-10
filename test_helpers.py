@@ -1,6 +1,6 @@
 import unittest
 import datetime
-from main import *
+from helpers import *
 from transaction import Transaction
 
 

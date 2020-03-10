@@ -9,7 +9,7 @@ from bokeh.models import DatetimeTickFormatter
 def plot_wise(data):
     """Takes in {act: {date: [Transaction, ...]}} and converts it to (act, [dates], [balances], color)."""
     lines = []
-    colors = ('aqua','blue','brown','cyan','darkblue','darkgreen','darkorange','darkred','gold','green','grey','hotpink','ivory','lime','orange','pink','purple','red','silver','tan','yellow')
+    colors = ('aqua','blue','brown','cyan','darkblue','darkgreen','darkorange','darkred','gold','green','grey','hotpink','lime','orange','pink','purple','red','silver','tan','yellow')
     used = [None, ] # used colors
 
     # Check the validity of the input data.

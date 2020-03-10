@@ -1,26 +1,9 @@
-import csv, random, unittest, datetime
+import datetime, csv_helpers
 from collections import defaultdict
-from pathlib import Path
-from queue import Queue
-from bokeh.plotting import output_file, figure, show
-from bokeh.models import DatetimeTickFormatter
 from transaction import Transaction
+from helpers import *
+from pathlib import Path
 
-
-def list_files(root, recursive=True):
-    files = []
-    to_search = Queue()
-    to_search.put(root)
-
-    while not to_search.empty():
-        path = to_search.get()
-        for p in path.iterdir():
-            if p.is_file() and not p.is_symlink():
-                files.append(p)
-            elif recursive and p.is_dir():
-                to_search.put(p)
-    return files
-    
 
 def parse_csv_row(row):
     """Turn a CSV row from a First Calgary statement into Python objects"""
@@ -48,16 +31,6 @@ def parse_csv_row(row):
     return tuple(n_row)
 
 
-def read_csv(path):
-    """Read and parse all rows in a given file path."""
-    reader = csv.reader(open(path, 'r'))
-    data = []
-    for row in reader:
-        row = parse_csv_row(row)
-        data.append(row)
-    return data
-
-
 def parse_trans(row):
     """Turn a CSV row from a First Calgary statement into a Transaction object."""
     if row[4]:
@@ -76,12 +49,11 @@ def parse_trans(row):
 
 def read_trans(path):
     """Read a given CSV file into a list of Transaction objects."""
-    csv = read_csv(path)
+    csv = csv_helpers.read_csv(path, parser=parse_csv_row)
     trans = []
     for row in csv:
         trans.append(parse_trans(row))
     return trans
-
 
 
 def read_statements(path):
@@ -106,3 +78,18 @@ def get_statements(path):
     trans = unique_trans(trans)
     return trans
 
+
+def load():
+    transactions = get_statements(Path("statements/first_calgary"))
+    # [Transaction]
+
+    accounts = act_wise(transactions)
+    # {act: [Transaction]}
+
+    act_date = date_wise(accounts)
+    # {act: {date: [Transaction]}}
+
+    act_bals = daily_balances(act_date)
+    # {act: {date: balance}}
+    
+    return act_bals
