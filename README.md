@@ -27,9 +27,10 @@ Put a JSON output into aliases.json containing {"source account name": "what you
 	balance if there are no reconds that new.
 
 # ToDo
-- Finish the derivation of First Calgary statement balances for missing days.
 - Sort statements by import module (named the same for simplicity I think)
 - Implement more statement modules
+- Put statement modules in a modules directory. I haven't done this because I don't know how to properly
+   structure folders in a Python project such that they can use functions in the parent folder.
 
 
 ## Versions
@@ -38,3 +39,5 @@ Put a JSON output into aliases.json containing {"source account name": "what you
 - d417120705d3ee1996163f932b67137f63858426:
 	After refactor
 	Modularized importing of data points. Fixed data interp
+- 4ae863661adee8f640c0682add8e8c86e372e520
+	Switched to plotly for graphing.
