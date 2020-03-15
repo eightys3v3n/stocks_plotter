@@ -1,26 +1,22 @@
-import json
 from plot import plot
-import first_calgary
 from helpers import *
 from pathlib import Path
 
+import yahoo_finance
+
 
 def main():
-    if Path("aliases.json").exists():
-        print("Loading aliases from aliases.json")
-        act_aliases = json.loads(open("aliases.json", "r").read())
-    else:
-        act_aliases = None
-
     accounts = {}
     
-    accounts.update(first_calgary.load())
+    accounts.update(yahoo_finance.load("csv_files/xrp_usd.csv", "XRP/USD", scale=50))
+    accounts.update(yahoo_finance.load("csv_files/btc_usd.csv", "BTC/USD", scale=0.005))
+    accounts.update(yahoo_finance.load("csv_files/eth_usd.csv", "ETH/USD", scale=0.1))
+    accounts.update(yahoo_finance.load("csv_files/cad_usd.csv", "CAD/USD", scale=100))
+    accounts.update(yahoo_finance.load("csv_files/gspc.csv", "S&P 500", scale=.05))
+    #accounts.update(yahoo_finance.load("csv_files/cad_usd.csv", "CAD/USD", scale=100))
 
-    if act_aliases is not None:
-        accounts = apply_aliases(accounts, act_aliases)
-    
     # adds a line for total value of all accounts.
-    create_total(accounts)
+    #create_total(accounts)
     
     plot(accounts)
 

@@ -11,20 +11,6 @@ def plot_wise(data):
     colors = ('aqua','blue','brown','cyan','darkblue','darkgreen','darkorange','darkred','gold','green','grey','hotpink','lime','orange','pink','purple','red','silver','tan','yellow')
     used = [None, ] # used colors
 
-    # Check the validity of the input data.
-    dates = set()
-
-    for act, act_dates in data.items():
-        for date, bal in act_dates.items():
-            dates.add(date)
-    
-    for act, act_dates in data.items():
-        if set(act_dates) != dates:
-            with open("error.log", "w") as f:
-                f.write("{}\n".format(dates))
-                f.write("{}: {}\n".format(act, act_dates))
-            raise Exception("Account: '{}' doesn't have the same dates as other given accounts.".format(act))
-
     for act, act_dates in data.items():
         # pick a random color for this account
         c = None
@@ -51,9 +37,9 @@ def plot(data):
                                     name=act,
                                     line=dict(color=color, width=2)))
 
-    figure.update_layout(title="Net Worth Over Time",
+    figure.update_layout(title="Various information over time",
                          xaxis_title="Date",
-                         yaxis_title="CAD $")
+                         yaxis_title="Various scales")
     figure.show()
     return figure
 
