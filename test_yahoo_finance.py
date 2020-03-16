@@ -1,4 +1,4 @@
-from xrp_usd import *
+from yahoo_finance import *
 import datetime
 import unittest
 

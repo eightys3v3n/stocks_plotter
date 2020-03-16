@@ -13,7 +13,6 @@ def parse_csv_row(i, row):
     for c in row:
         c = c.strip()
         if c == "": c = None
-        if c == "null": c = None
         n_row.append(c)
 
     try:
@@ -24,16 +23,6 @@ def parse_csv_row(i, row):
 
     if n_row[1]:
         n_row[1] = float(n_row[1])
-    if n_row[2]:
-        n_row[2] = float(n_row[2])
-    if n_row[3]:
-        n_row[3] = float(n_row[3])
-    if n_row[4]:
-        n_row[4] = float(n_row[4])
-    if n_row[5]:
-        n_row[5] = float(n_row[5])
-    if n_row[6]:
-        n_row[6] = float(n_row[6])
     
     return tuple(n_row)
 
@@ -49,10 +38,7 @@ def read_csv(path):
 
 
 def map_price_range(prices, min, max):
-    for p in prices:
-        if None in p:
-            prices.remove(p)
-            
+    """prices: [(date, price)]"""
     min_p, max_p = min_max_prices(prices)
     n_prices = map(
         lambda row:
@@ -63,13 +49,11 @@ def map_price_range(prices, min, max):
 
 def load(path, name, min=0, max=100):
     prices = read_csv(Path(path))
-    # [(date, open, high, low, close, adj_close, volume)]
+    # [(date, num_comments+num_posts)]
 
-    prices = [(date, close) for date, open, high, low, close, adj_close, volume in prices]
-    
     prices = map_price_range(prices, min, max)
-    
-    bals = {date: price for date, price in prices}
+
+    bals = {date: activity for date, activity in prices}
     act_bals = {name: bals}
     # {act_name: {date: close_price}}
     

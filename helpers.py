@@ -60,3 +60,21 @@ def create_total(act_bals):
             else:
                 totals[date] = bal
     act_bals["total"] = totals
+
+
+def map_range(minmax_in, minmax_out, val):
+    val -= minmax_in[0]
+    percent = val / minmax_in[1]
+    out = percent * (minmax_out[1] - minmax_out[0])
+    out += minmax_out[0]
+    out = round(out, 6)
+    
+    return out
+
+
+def min_max_prices(prices):
+    """prices: [(date, price)]"""
+    min_p = min(p for d, p in prices)
+    max_p = max(p for d, p in prices)
+    return min_p, max_p
+    

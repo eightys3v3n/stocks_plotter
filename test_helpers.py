@@ -39,3 +39,18 @@ class TestHelpers(unittest.TestCase):
             datetime.date(2020, 1, 9),
             datetime.date(2020, 1, 10)
         ])
+
+
+    def test_map_range(self):
+        self.assertEqual(map_range((0, 10), (1, 2), 5), 1.5)
+        self.assertEqual(map_range((0, 10), (0, 1), 5), 0.5)
+        self.assertEqual(map_range((0, 10), (0, 100), 4.9), 49)
+        self.assertEqual(map_range((0, 10), (0, 100), 2.2), 22)
+
+
+    def test_min_max_prices(self):
+        inp = [("a random date", 1),
+               ("another date ", 2),
+               ("third date   ", 3)]
+        outp = min_max_prices(inp)
+        self.assertEqual(outp, (1, 3))
