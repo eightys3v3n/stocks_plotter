@@ -4,7 +4,26 @@ from helpers import *
 from pathlib import Path
 
 
-"""Export from Yahoo Finance"""
+"""
+Export from BigQuery https://console.cloud.google.com/bigquery?FK=fh-bigquery
+
+```
+SELECT
+  date, count
+FROM (
+  SELECT
+    FORMAT_TIMESTAMP("%Y-%m-%d", PARSE_TIMESTAMP("%s", CAST(created_utc AS STRING))) AS date,
+    SUM(num_comments)+COUNT(*) AS count
+  FROM
+    `fh-bigquery.reddit_posts.201*`
+  WHERE
+    UPPER(subreddit)="XRP"
+  GROUP BY
+    FORMAT_TIMESTAMP("%Y-%m-%d", PARSE_TIMESTAMP("%s", CAST(created_utc AS STRING))))
+ORDER BY
+  date
+```
+"""
 
 
 def parse_csv_row(i, row):
